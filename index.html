@@ -1,23 +1,21 @@
 <style>
 .canvas_container{
 	position: absolute;
-	width:502px;
-	height:502px;
+	width:802px; height:502px;
 	overflow: hidden;
 
 	transition: height 0.4s ease-in-out;
 }
 canvas{
-	width:500px;
-	height:500px;
+	width:800px; height:500px;
 	border: 1px solid #000;
 }
 </style>
 <div class="canvas_container">
-	<canvas id="actual" width="500" height="500"></canvas>
+	<canvas id="actual" width="800" height="500"></canvas>
 </div>
 <div class="canvas_container" id="virtual_container">
-	<canvas id="virtual" width="500" height="500"></canvas>
+	<canvas id="virtual" width="800" height="500"></canvas>
 </div>
 
 <span style="display:none">
@@ -27,151 +25,6 @@ canvas{
 	<img id="spikes" src="img/spikes.png"/>
 </span>
 
-<script src="Key.js"></script>
-
-<script>
-
-/*****
-
-GAMER GAME:
-- VR: Switching between two worlds
-- Recalibrating
-- Picking up dynamite
-- Dialogue
-- Super-simple AI
-
-BABY STEPS
-1. Create lil' art
-2. Tile mapping for obstacles
-3. Follow cam, yay
-4. Make a little game.
-
-*****/
-
-var actualCanvas = document.getElementById("actual");
-var actualContext = actualCanvas.getContext('2d');
-var virtualCanvas = document.getElementById("virtual");
-var virtualContext = virtualCanvas.getContext('2d');
-
-actualCanvas.style.display = 'none';
-
-function Player(){
-	var self = this;
-	self.x = 250;
-	self.y = 250;
-	self.vel = {x:0,y:0};
-	self.update = function(){
-
-		if(!self.active) return;
-
-		var acc = 1.5;
-		if(Key.left){
-			self.vel.x-=acc;
-			self.direction = -1;
-		}
-		if(Key.right){
-			self.vel.x+=acc;
-			self.direction = 1;
-		}
-		if(Key.up) self.vel.y-=acc;
-		if(Key.down) self.vel.y+=acc;
-
-		self.vel.x *= 0.7;
-		self.vel.y *= 0.7;
-		self.x += self.vel.x;
-		self.y += self.vel.y;
-
-	};
-	self.draw = function(ctx){
-		/*ctx.fillStyle = self.FILL_STYLE;
-		ctx.fillRect(self.x-10,self.y-30,20,30);*/
-		ctx.save();
-		ctx.translate(self.x,self.y);
-		ctx.scale(self.direction,1);
-		ctx.drawImage(self.IMAGE, -50,-100,100,100);
-		ctx.restore();
-	};
-}
-
-///////////////////
-
-var virtualPlayer = new Player();
-virtualPlayer.IMAGE = document.getElementById("knight");
-virtualPlayer.active = true;
-
-var actualPlayer = new Player();
-actualPlayer.IMAGE = document.getElementById("kid");
-actualPlayer.active = true;
-
-///////////////////
-
-var actualObstacles = [];
-for(var i=0;i<10;i++){
-	actualObstacles.push({x:Math.random()*500, y:Math.random()*500});
-}
-var actualObstacleImage = document.getElementById("mess");
-
-var virtualObstacles = [];
-for(var i=0;i<10;i++){
-	virtualObstacles.push({x:Math.random()*500, y:Math.random()*500});
-}
-var virtualObstacleImage = document.getElementById("spikes");
-
-///////////////////
-
-var RAF = window.requestAnimationFrame;
-var lastSpace = false;
-function draw(){
-
-	if(Key.action && !lastSpace){
-		if(virtualPlayer.active = !virtualPlayer.active){
-			virtualCanvas.style.display = 'block';
-			document.getElementById("virtual_container").style.height = "500px";
-			setTimeout(function(){
-				actualCanvas.style.display = 'none';
-			},400);
-		}else{
-			actualCanvas.style.display = 'block';
-			document.getElementById("virtual_container").style.height = "0px";
-			setTimeout(function(){
-				virtualCanvas.style.display = 'none';
-			},400);
-		}
-	}
-	lastSpace = Key.action;
-
-	virtualPlayer.update();
-	actualPlayer.update();
-
-	// DRAW ACTUAL WORLD //
-
-	var ctx = actualContext;
-	ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
-	ctx.save();
-	ctx.translate(250-actualPlayer.x,300-actualPlayer.y);
-	for(var i=0;i<actualObstacles.length;i++){
-		var obs = actualObstacles[i];
-		ctx.drawImage(actualObstacleImage, obs.x-50, obs.y-100, 100, 100);
-	}
-	actualPlayer.draw(ctx);
-	ctx.restore();
-
-	// DRAW VIRTUAL WORLD //
-
-	var ctx = virtualContext;
-	ctx.fillStyle = "#888888";
-	ctx.fillRect(0,0,ctx.canvas.width,ctx.canvas.height);
-	ctx.save();
-	ctx.translate(250-virtualPlayer.x,300-virtualPlayer.y);
-	for(var i=0;i<virtualObstacles.length;i++){
-		var obs = virtualObstacles[i];
-		ctx.drawImage(virtualObstacleImage, obs.x-50, obs.y-100, 100, 100);
-	}
-	virtualPlayer.draw(ctx);
-	ctx.restore();
-
-	RAF(draw);
-}
-draw();
-
-</script>
+<script src="scripts/Key.js"></script>
+<script src="scripts/Player.js"></script>
+<script src="scripts/main.js"></script>

@@ -1,0 +1,98 @@
+<style>
+canvas{
+	width:500px;
+	height:500px;
+	border: 1px solid #000;
+}
+</style>
+<canvas id="actual" width="500" height="500"></canvas>
+<canvas id="virtual" width="500" height="500"></canvas>
+
+<script src="Key.js"></script>
+
+<script>
+/*****
+
+GAMER GAME:
+- VR: Switching between two worlds
+- Recalibrating
+- Picking up dynamite
+- Dialogue
+- Super-simple AI
+
+*****/
+
+var actualCanvas = document.getElementById("actual");
+var actualContext = actualCanvas.getContext('2d');
+var virtualCanvas = document.getElementById("virtual");
+var virtualContext = virtualCanvas.getContext('2d');
+
+actualCanvas.style.display = 'none';
+
+function Player(){
+	var self = this;
+	self.x = 250;
+	self.y = 250;
+	self.vel = {x:0,y:0};
+	self.update = function(){
+
+		if(!self.active) return;
+
+		var acc = 1.5;
+		if(Key.left) self.vel.x-=acc;
+		if(Key.right) self.vel.x+=acc;
+		if(Key.up) self.vel.y-=acc;
+		if(Key.down) self.vel.y+=acc;
+
+		self.vel.x *= 0.7;
+		self.vel.y *= 0.7;
+		self.x += self.vel.x;
+		self.y += self.vel.y;
+
+	};
+	self.draw = function(ctx){
+		ctx.fillStyle = self.FILL_STYLE;
+		ctx.fillRect(self.x-10,self.y-30,20,30);
+	};
+}
+
+var virtualPlayer = new Player();
+virtualPlayer.FILL_STYLE = "#000000";
+virtualPlayer.active = true;
+
+var actualPlayer = new Player();
+actualPlayer.FILL_STYLE = "#cc2727";
+actualPlayer.active = true;
+
+var RAF = window.requestAnimationFrame;
+var lastSpace = false;
+function draw(){
+
+	if(Key.action && !lastSpace){
+		if(virtualPlayer.active = !virtualPlayer.active){
+			actualCanvas.style.display = 'none';
+			virtualCanvas.style.display = 'block';
+		}else{
+			actualCanvas.style.display = 'block';
+			virtualCanvas.style.display = 'none';
+		}
+	}
+	lastSpace = Key.action;
+
+	virtualPlayer.update();
+	actualPlayer.update();
+
+	var ctx = actualContext;
+	ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+	actualPlayer.draw(ctx);
+
+	var ctx = virtualContext;
+	ctx.fillStyle = "#888888";
+	ctx.fillRect(0,0,ctx.canvas.width,ctx.canvas.height);
+	virtualPlayer.draw(ctx);
+
+	RAF(draw);
+}
+draw();
+
+</script>

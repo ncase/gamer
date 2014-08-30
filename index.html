@@ -1,30 +1,29 @@
 <style>
 .canvas_container{
-	position: absolute;
-	width:802px; height:502px;
+	/*position: absolute;*/
+	width:805px; height:505px;
 	overflow: hidden;
 
 	transition: height 0.4s ease-in-out;
 }
 canvas{
 	width:800px; height:500px;
-	border: 1px solid #000;
+	border: 2px solid #000;
 }
 </style>
-<div class="canvas_container">
-	<canvas id="actual" width="800" height="500"></canvas>
-</div>
-<div class="canvas_container" id="virtual_container">
-	<canvas id="virtual" width="800" height="500"></canvas>
-</div>
+<canvas id="game" width="800" height="500"></canvas>
 
-<span style="display:none">
-	<img id="kid" src="img/kid.png"/>
-	<img id="knight" src="img/knight.png"/>
-	<img id="mess" src="img/mess.png"/>
-	<img id="spikes" src="img/spikes.png"/>
-</span>
+<script src="scripts/library/Q.js"></script>
+<script src="scripts/library/minpubsub.js"></script>
 
-<script src="scripts/Key.js"></script>
-<script src="scripts/Player.js"></script>
-<script src="scripts/main.js"></script>
+<script src="scripts/core/Asset.js"></script>
+<script src="scripts/core/Loader.js"></script>
+<script src="scripts/core/Key.js"></script>
+
+<script src="scripts/game/Player.js"></script>
+<script src="scripts/game/World.js"></script>
+<script src="scripts/game/ActualWorld.js"></script>
+<script src="scripts/game/VirtualWorld.js"></script>
+<script src="scripts/game/Game.js"></script>
+
+<script src="scripts/game/main.js"></script>

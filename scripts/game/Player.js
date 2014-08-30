@@ -1,25 +1,26 @@
 function Player(){
 
 	var self = this;
-	self.x = 250;
-	self.y = 250;
+	self.x = 0;
+	self.y = 0;
 	self.vel = {x:0,y:0};
+	self.active = true;
 
 	self.update = function(){
 
-		if(!self.active) return;
-
-		var acc = 1.5;
-		if(Key.left){
-			self.vel.x-=acc;
-			self.direction = -1;
+		var acc = 0.05;
+		if(self.active){
+			if(Key.left){
+				self.vel.x-=acc;
+				self.direction = -1;
+			}
+			if(Key.right){
+				self.vel.x+=acc;
+				self.direction = 1;
+			}
+			if(Key.up) self.vel.y-=acc;
+			if(Key.down) self.vel.y+=acc;
 		}
-		if(Key.right){
-			self.vel.x+=acc;
-			self.direction = 1;
-		}
-		if(Key.up) self.vel.y-=acc;
-		if(Key.down) self.vel.y+=acc;
 
 		self.vel.x *= 0.7;
 		self.vel.y *= 0.7;
@@ -30,7 +31,7 @@ function Player(){
 
 	self.draw = function(ctx){
 		ctx.save();
-		ctx.translate(self.x,self.y);
+		ctx.translate(self.x*W,self.y*H);
 		ctx.scale(self.direction,1);
 		ctx.drawImage(self.IMAGE, -50,-100,100,100);
 		ctx.restore();

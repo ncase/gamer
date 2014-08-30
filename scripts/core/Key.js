@@ -16,12 +16,14 @@
 	var onKeyDown = function(event){
 		var code = KEY_CODES[event.keyCode];
 	    Key[code] = true;
+	    publish("mouse/down",[code]);
 	    event.stopPropagation();
 	    event.preventDefault();
 	}
 	var onKeyUp = function(event){
 		var code = KEY_CODES[event.keyCode];
 	    Key[code] = false;
+	    publish("mouse/up",[code]);
 	    event.stopPropagation();
 	    event.preventDefault();
 	}

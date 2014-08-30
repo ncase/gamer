@@ -20,6 +20,13 @@ function Player(){
 			}
 			if(Key.up) self.vel.y-=acc;
 			if(Key.down) self.vel.y+=acc;
+		}else{
+			if(Key.left){
+				self.direction = -1;
+			}
+			if(Key.right){
+				self.direction = 1;
+			}
 		}
 
 		self.vel.x *= 0.7;

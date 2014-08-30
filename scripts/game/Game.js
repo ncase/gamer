@@ -19,6 +19,7 @@ Game.init = function(){
 	Game.virtualWorld = new VirtualWorld();
 
 	// Toggling Virtual World
+	Game.headPos = 1;
 	Game.virtualWorld.active = true;
 	subscribe("mouse/down",function(code){
 		if(code!="action") return;
@@ -51,14 +52,27 @@ Game.init = function(){
 		
 		updatedSinceLastDraw = false;
 
-		Game.virtualWorld.draw(virtualContext);
-		Game.actualWorld.draw(actualContext);
+		if(Game.virtualWorld.active){
+			Game.headPos += 0.08;
+		}else{
+			Game.headPos -= 0.08;
+		}
+		if(Game.headPos<0.01) Game.headPos=0;
+		if(Game.headPos>0.99) Game.headPos=1;
+
+		if(Game.headPos!=0){
+			Game.virtualWorld.draw(virtualContext);
+		}
+		if(Game.headPos!=1){
+			Game.actualWorld.draw(actualContext);
+		}
 
 		Game.context.clearRect(0,0,800,500);
-		if(Game.virtualWorld.active){
-			Game.context.drawImage(virtualCanvas,0,0);
-		}else{
-			Game.context.drawImage(actualCanvas,0,0);
+		if(Game.headPos!=0){
+			Game.context.drawImage(virtualCanvas, 0,0,800,Game.headPos*500, 0,0,800,Game.headPos*500);
+		}
+		if(Game.headPos!=1){
+			Game.context.drawImage(actualCanvas, 0,Game.headPos*500,800,(1-Game.headPos)*500, 0,Game.headPos*500,800,(1-Game.headPos)*500);
 		}
 		
 		RAF(draw);

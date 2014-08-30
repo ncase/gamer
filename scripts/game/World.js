@@ -9,6 +9,9 @@ function World(){
 
 	self.init = function(){
 
+		// Player
+		self.player = new Player();
+
 		// Create background Canvas
 		self.bgCanvas = document.createElement("canvas");
 		self.bgCanvas.width = self.map[0].length*W;
@@ -25,13 +28,14 @@ function World(){
 					case self.WALL: img=self.WALL_IMAGE; break;
 					case self.FLOOR: img=self.FLOOR_IMAGE; break;
 					case self.OBSTACLE: img=self.OBSTACLE_IMAGE; break;
+					case "X":
+						self.player.x = x+0.5;
+						self.player.y = y+0.5;
+						break;
 				}
 				ctx.drawImage(img, x*W, y*H, W, H);
 			}
 		}
-
-		// Player
-		self.player = new Player();
 
 	};
 
